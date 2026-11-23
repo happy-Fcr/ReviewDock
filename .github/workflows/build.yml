@@ -1,0 +1,26 @@
+name: Build iPhone and Apple Watch
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: Build iPhone and embedded Apple Watch app
+        run: |
+          xcodebuild -version
+          xcodebuild -project ReviewDock.xcodeproj -scheme ReviewDock \
+            -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/study-build" \
+            CODE_SIGNING_ALLOWED=NO build
+          test -d "$RUNNER_TEMP/study-build/Build/Products/Debug-iphoneos/ReviewDock.app/PlugIns/ReviewDockWatch.app"
