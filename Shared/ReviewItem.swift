@@ -7,9 +7,9 @@ enum ReviewKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .mistake: "��������"
-        case .card: "֪ʶ��Ƭ"
-        case .task: "��ϰ�ƻ�"
+        case .mistake: "错题重做"
+        case .card: "知识卡片"
+        case .task: "复习计划"
         }
     }
 

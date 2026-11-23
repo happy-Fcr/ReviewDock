@@ -33,7 +33,7 @@ final class ReviewStore: NSObject, ObservableObject, WCSessionDelegate {
                 file = try JSONDecoder().decode(DataFile.self, from: Data(contentsOf: location))
             } catch {
                 file = DataFile()
-                loadError = "�޷���ȡ��ϰ���ݡ����ļ��ѱ����������´� App��"
+                loadError = "无法读取复习数据。旧文件已保留，请重新打开 App。"
             }
         } else {
             file = DataFile()
@@ -91,7 +91,7 @@ final class ReviewStore: NSObject, ObservableObject, WCSessionDelegate {
             file = next
             if sync { publish() }
         } catch {
-            storageError = "����ʧ�ܡ������豸�洢�ռ�����´� App��"
+            storageError = "保存失败。请检查设备存储空间后重新打开 App。"
         }
     }
 

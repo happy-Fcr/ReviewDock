@@ -10,7 +10,7 @@ struct ReviewDockWatchApp: App {
                 TimelineView(.everyMinute) { timeline in
                     TodayOnWatch(date: timeline.date)
                 }
-                .navigationTitle("���ո�ϰ")
+                .navigationTitle("今日复习")
             }
             .environmentObject(store)
         }
@@ -29,7 +29,7 @@ private struct TodayOnWatch: View {
             }
             Section {
                 let cards = due.filter { $0.kind == .card }
-                if cards.isEmpty { Text("���޴�����Ƭ").foregroundStyle(.secondary) }
+                if cards.isEmpty { Text("暂无待背卡片").foregroundStyle(.secondary) }
                 ForEach(cards) { card in
                     NavigationLink {
                         CardOnWatch(id: card.id)
@@ -41,24 +41,24 @@ private struct TodayOnWatch: View {
                     }
                 }
             } header: {
-                Label("֪ʶ��Ƭ", systemImage: ReviewKind.card.icon)
+                Label("知识卡片", systemImage: ReviewKind.card.icon)
             }
             Section {
                 let tasks = store.items.filter {
                     $0.kind == .task && ($0.isDue(on: date) ||
                     ($0.done && Calendar.current.isDate($0.modified, inSameDayAs: date)))
                 }
-                if tasks.isEmpty { Text("���޽�������").foregroundStyle(.secondary) }
+                if tasks.isEmpty { Text("暂无今日任务").foregroundStyle(.secondary) }
                 ForEach(tasks) { task in
                     Button {
                         store.respond(to: task, value: !task.done)
                     } label: {
                         Label(task.title, systemImage: task.done ? "checkmark.circle.fill" : "circle")
                     }
-                    .accessibilityValue(task.done ? "�����" : "�����")
+                    .accessibilityValue(task.done ? "已完成" : "待完成")
                 }
             } header: {
-                Label("��ϰ�ƻ�", systemImage: ReviewKind.task.icon)
+                Label("复习计划", systemImage: ReviewKind.task.icon)
             }
         }
     }
@@ -78,17 +78,17 @@ private struct CardOnWatch: View {
                     Text(card.title).font(.headline)
                     if showAnswer {
                         Text(card.answer)
-                        Button("��ס��") { answer(card, true) }.buttonStyle(.borderedProminent)
-                        Button("������") { answer(card, false) }
+                        Button("记住了") { answer(card, true) }.buttonStyle(.borderedProminent)
+                        Button("还不熟") { answer(card, false) }
                     } else {
-                        Button("������") { showAnswer = true }.buttonStyle(.borderedProminent)
+                        Button("翻看答案") { showAnswer = true }.buttonStyle(.borderedProminent)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 4)
             }
         } else {
-            Text("���ſ�Ƭ��ɾ��")
+            Text("这张卡片已删除")
         }
     }
 
